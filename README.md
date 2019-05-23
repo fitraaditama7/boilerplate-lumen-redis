@@ -1,5 +1,5 @@
 # Boilerplate - Lumen With Redis
-CMS E-Learning - Backoffice
+
 
 [Installation](#installation) |
 
