@@ -50,18 +50,23 @@ if (!function_exists('errorCustomStatus')) {
      *
      * */
 
-     function errorCustomStatus($err, $status) {
+     function errorCustomStatus($status, $message) {
         $resultPrint = [];
-        if ($status == null) {
-            $resultPrint['status'] = 400;
-        } else {
-            $resultPrint['status'] = $status;
+        $resultPrint['status'] = $status;
+        switch($status) {
+            case 404:
+                $resultPrint['message'] = "Halaman tidak ditemukan";
+            case 403:
+                $resultPrint['message'] = "Tidak memiliki izin untuk mengakses halaman ini";
+            case 408:
+                $resultPrint['message'] = "Waktu tunggu server telah habis";
+            case 504:
+                $resultPrint['message'] = "Server sibuk";
+            case 503:
+                $resultPrint['message'] = "Layanan server tidak tersedia untuk saat ini";
+            default:
+                $resultPrint['message'] = "Terjadi error di internal server";
         }
-
-        $resultPrint['errors'] = [];
-
-        $resultPrint['errors']['message'] = $err;
-
         return response()->json($resultPrint);
      }
 }
