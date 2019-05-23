@@ -16,7 +16,7 @@ CMS E-Learning - Backoffice
   $ cd boilerplate-lumen-redis
   $ cp .env.sample .env
   $ composer install
-  $ https://lumen.laravel.com/docs/5.8
+  $ php -S localhost:8000 -t public
 ```
 
 ### License
