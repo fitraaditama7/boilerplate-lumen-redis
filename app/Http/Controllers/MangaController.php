@@ -11,18 +11,16 @@ class MangaController extends Controller {
 
         // Get Cache if key exist in redis database
 
-        try {
+
             // getCache($key);
             $data = Manga::select('*')
-                            ->wheres('id', '=', '230')
-                            ->gets();
+                            // ->where('id', '=', '230')
+                            ->get();
 
-            return response()->json($data);
+            return responses($data, null);
             // setCache($key, $data);
 
-        } catch (Throwable $e) {
-            return 'error';
-        }
+
 
         // Set Cache if value of data in Key equals nil in redis database
         // deleteCache($key);

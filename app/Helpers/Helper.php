@@ -31,7 +31,7 @@ if (!function_exists('responses')) {
             $resultPrint['data'] = $data;
         }
 
-        return response()->json($resultPrint);
+        return response()->json($resultPrint)->setStatusCode($resultPrint['status']);
 
      }
 }
@@ -53,42 +53,51 @@ if (!function_exists('errorCustomStatus')) {
      function errorCustomStatus($status, $message) {
         $resultPrint = [];
         $resultPrint['status'] = $status;
-        switch($status) {
+
+        switch ($status) {
             case 404:
                 $resultPrint['message'] = "Halaman tidak ditemukan";
+                break;
             case 403:
                 $resultPrint['message'] = "Tidak memiliki izin untuk mengakses halaman ini";
+                break;
             case 408:
                 $resultPrint['message'] = "Waktu tunggu server telah habis";
+                break;
             case 504:
                 $resultPrint['message'] = "Server sibuk";
+                break;
             case 503:
                 $resultPrint['message'] = "Layanan server tidak tersedia untuk saat ini";
+                break;
             default:
                 $resultPrint['message'] = "Terjadi error di internal server";
+                break;
         }
-        return response()->json($resultPrint);
+        return response()->json($resultPrint)->setStatusCode($status);
      }
 }
 
-if (!function_exists('notFound')) {
-    /**
-     * Returns response json with 404 or other error status code
-     *
-     * @return json a json response for API
-     *
-     **/
+if (!function_exist('queryError')) {
+      /**
+    *
+    * @param string $message
+    * Message when query error
+    *
+    * Returns response json with data from json
+    *
+    * @return json a json response for API
+    *
+    **/
+    function queryError($message) {
+        $resultPrint = [];
+        $resultPrint['status'] = 500;
+        $resultPrint['message'] = $message;
 
-
-     function notFound() {
-         $resultPrint = [];
-
-         $resultPrint['status'] = 404;
-         $resultPrint['message'] = "Sorry, data does not exist";
-
-         return $response()->json($resultPrint);
-     }
+        return response()->json($resultPrint)->setStatusCode(500);
+    }
 }
+
 
 
 // REDIS
@@ -142,4 +151,6 @@ if (!function_exists('deleteCache')) {
         app('redis')->del($key);
     }
 }
+
+
 
