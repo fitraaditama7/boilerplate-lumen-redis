@@ -78,7 +78,7 @@ if (!function_exists('errorCustomStatus')) {
      }
 }
 
-if (!function_exist('queryError')) {
+if (!function_exists('queryError')) {
       /**
     *
     * @param string $message
