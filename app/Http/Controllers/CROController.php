@@ -116,7 +116,7 @@ class CROController extends Controller {
             $check->updated_at = date("Y-m-d H:i:s",time());
             $check->save();
 
-            return \responses(['message' => 'Data Berhasil direstore']);
+            return \responses(['message' => 'Data Berhasil direstore'], null);
         } catch (QueryException $th) {
             return \errorCustomStatus(500, $th);
         }
@@ -129,8 +129,8 @@ class CROController extends Controller {
                         ->firstOrFail();
             $check->delete();
 
-            return \responses(['message' => 'Data Berhasil dihapus']);
-        } catch (\Throwable $th) {
+            return \responses(['message' => 'Data Berhasil dihapus'], null);
+        } catch (QueryException $th) {
             return \errorCustomStatus(500, $th);
         }
     }
