@@ -22,14 +22,7 @@ if (!function_exists('responses')) {
         } else {
             $resultPrint['status'] = $status;
         }
-
-        // $resultPrint['status'] = $status;
-
-        if ($data == null) {
-            $resultPrint['message'] = $message;
-        } else {
-            $resultPrint['data'] = $data;
-        }
+        $resultPrint['data'] = $data;
 
         return response()->json($resultPrint)->setStatusCode($resultPrint['status']);
 
@@ -71,7 +64,7 @@ if (!function_exists('errorCustomStatus')) {
                 $resultPrint['message'] = "Layanan server tidak tersedia untuk saat ini";
                 break;
             default:
-                $resultPrint['message'] = "Terjadi error di internal server";
+                $resultPrint['message'] = $message;
                 break;
         }
         return response()->json($resultPrint)->setStatusCode($status);
