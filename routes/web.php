@@ -21,5 +21,5 @@ $router->get('/cro/{id}', 'CROController@show');
 $router->post('/cro', 'CROController@store');
 $router->put('/cro/{id}', 'CROController@update');
 $router->delete('/cro/{id}', 'CROController@softDelete');
-$router->update('/cro/{id}', 'CROController@restore');
-$router->delete('/cro/{id}', 'CROController@destroy');
+$router->put('/cro/restore/{id}', 'CROController@restore');
+$router->delete('/cro/destroy/{id}', 'CROController@destroy');

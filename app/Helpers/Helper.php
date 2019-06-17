@@ -54,8 +54,8 @@ if (!function_exists('errorCustomStatus')) {
             case 403:
                 $resultPrint['message'] = "Tidak memiliki izin untuk mengakses halaman ini";
                 break;
-            case 408:
-                $resultPrint['message'] = "Waktu tunggu server telah habis";
+            case 422:
+                $resultPrint['message'] = "Data Belum Lengkap Cek Kembali Inputan Data Anda";
                 break;
             case 504:
                 $resultPrint['message'] = "Server sibuk";
