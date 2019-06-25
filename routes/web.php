@@ -16,10 +16,24 @@ $router->get('/', function () use ($router) {
     return $router->app->version();
 });
 
-$router->get('/cro', 'CROController@index');
-$router->get('/cro/{id}', 'CROController@show');
-$router->post('/cro', 'CROController@store');
-$router->put('/cro/{id}', 'CROController@update');
-$router->delete('/cro/{id}', 'CROController@softDelete');
-$router->put('/cro/restore/{id}', 'CROController@restore');
-$router->delete('/cro/destroy/{id}', 'CROController@destroy');
+// $router->get('/cro', 'CROController@index');
+// $router->get('/cro/{id}', 'CROController@show');
+// $router->post('/cro', 'CROController@store');
+// $router->put('/cro/{id}', 'CROController@update');
+// $router->delete('/cro/{id}', 'CROController@softDelete');
+// $router->put('/cro/restore/{id}', 'CROController@restore');
+// $router->delete('/cro/destroy/{id}', 'CROController@destroy');
+
+
+
+
+$router->group(['prefix' => 'vehicle'], function() use($router) {
+    $router->get('/get', 'VehicleController@index');
+    $router->get('/detail/{id}', 'VehicleController@show');
+    $router->get('/dashboard', 'VehicleController@dashboard');
+    $router->post('/search', 'VehicleController@search');
+    $router->post('/insert', 'VehicleController@store');
+    $router->post('/delete', 'VehicleController@delete');
+    $router->put('/update/{id}', 'VehicleController@update');
+    $router->put('/approve/{id}', 'VehicleController@approve');
+});

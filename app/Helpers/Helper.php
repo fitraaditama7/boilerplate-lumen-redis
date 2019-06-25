@@ -16,16 +16,18 @@ if (!function_exists('responses')) {
 
      function responses($data, $status) {
         $resultPrint = [];
-
         if ($status == null) {
             $resultPrint['status'] = 200;
         } else {
             $resultPrint['status'] = $status;
         }
+        if(is_array($data) == true) {
+            $total = count($data);
+            $resultPrint['total'] = $total;
+        }
         $resultPrint['data'] = $data;
 
         return response()->json($resultPrint)->setStatusCode($resultPrint['status']);
-
      }
 }
 
@@ -71,7 +73,7 @@ if (!function_exists('errorCustomStatus')) {
      }
 }
 
-if (!function_exists('queryError')) {
+if (!function_exists('errorQuery')) {
       /**
     *
     * @param string $message
@@ -82,7 +84,7 @@ if (!function_exists('queryError')) {
     * @return json a json response for API
     *
     **/
-    function queryError($message) {
+    function errorQuery($message) {
         $resultPrint = [];
         $resultPrint['status'] = 500;
         $resultPrint['message'] = $message;
