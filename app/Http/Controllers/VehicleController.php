@@ -11,6 +11,13 @@ use App\Vehicle;
 class VehicleController extends Controller {
     public function index() {
         try {
+
+            $key = 'data-vehicle';
+            $checkCache = getCache($key);
+
+            if ($checkCache != null) {
+                return responses($checkCache, null);
+            }
             $data = Vehicle::select([
                 'id',
                 'jenis_kendaraan',
@@ -24,7 +31,10 @@ class VehicleController extends Controller {
                 'updated_at',
                 'status'
             ])->get();
+
+            setCache($key, $data);
             return responses($data, null);
+
         } catch (QueryException $th) {
             //throw $th;
             return \errorCustomStatus(500, $th);
@@ -33,6 +43,14 @@ class VehicleController extends Controller {
 
     public function show($id) {
         try {
+
+            $key = 'data-vehicle-'.$id;
+            $checkCache = getCache($key);
+
+            if ($checkCache != null) {
+                return responses($checkCache, 200);
+            }
+
             $data = Vehicle::select([
                'jenis_kendaraan',
                'kapasitas_kendaraan',
@@ -59,6 +77,7 @@ class VehicleController extends Controller {
             ->where('status', 1)
             ->firstOrFail();
 
+            setCache($key, $data);
             return responses($data, 201);
         } catch (QueryException $th) {
             return \errorCustomStatus(500, $th);
@@ -67,6 +86,7 @@ class VehicleController extends Controller {
 
     public function store(Request $request) {
         try {
+            $key = 'data-vehicle';
             $this->validate($request, [
                 'jenis_kendaraan' => 'required',
                 'kapasitas_kendaraan' => 'required',
@@ -109,6 +129,7 @@ class VehicleController extends Controller {
                 'updated_at' => date("Y-m-d",time())
             ]);
 
+            deleteCache($key);
             return responses(['message' => 'Data berhasil disimpan'], null);
 
         } catch (QueryException $th) {
@@ -155,6 +176,7 @@ class VehicleController extends Controller {
 
     public function update($id, Request $request) {
         try {
+            $key = 'data-vehicle-'.$id;
             $check = Vehicle::where('id', $id)
                             ->where('status', 1)
                             ->firstOrFail();
@@ -163,6 +185,7 @@ class VehicleController extends Controller {
             $input = $request->all();
             $check->fill($input)->save();
 
+            deleteCache($key);
             return responses(['message' => 'Data berhasil diupdate'], 200);
         } catch (QueryException $th) {
             return \errorCustomStatus(500, $th);
@@ -172,6 +195,8 @@ class VehicleController extends Controller {
     public function delete(Request $request) {
         try {
             $id = $request->id;
+            $key = 'data-vehicle-'.$id;
+
             $check = Vehicle::where('id', $id)
                             ->where('status', 1)
                             ->firstOrFail();
@@ -182,6 +207,7 @@ class VehicleController extends Controller {
             $input = $request->all();
             $check->fill($input)->save();
 
+            deleteCache($key);
             return responses(['message' => 'Data berhasil didelete'], 200);
         } catch (QueryException $th) {
             return \errorCustomStatus(500, $th);
@@ -190,6 +216,7 @@ class VehicleController extends Controller {
 
     public function approve($id, Request $request) {
         try {
+            $key = 'data-vehicle-'.$id;
             $check = Vehicle::where('id', $id)
                             ->where('status', 1)
                             ->firstOrFail();
@@ -198,6 +225,7 @@ class VehicleController extends Controller {
             $input = $request->all();
             $check->fill($input)->save();
 
+            deleteCache($key);
             return responses(['message' => 'Data telah diapprove'], null);
         } catch (QueryException $th) {
             return errorCustomStaus(500, $th);

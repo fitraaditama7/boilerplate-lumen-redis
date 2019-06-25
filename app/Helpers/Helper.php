@@ -112,9 +112,7 @@ if (!function_exists('getCache')) {
    function getCache($key) {
        if (app('redis')->get($key) != null) {
            $data = app('redis')->get($key);
-           $data = json_decode($data, true);
-
-           return responses($data, null);
+           return $data;
        }
    }
 }
