@@ -16,6 +16,7 @@ if (!function_exists('responses')) {
 
      function responses($data, $status) {
         $resultPrint = [];
+        $data = json_decode($data);
         if ($status == null) {
             $resultPrint['status'] = 200;
         } else {
