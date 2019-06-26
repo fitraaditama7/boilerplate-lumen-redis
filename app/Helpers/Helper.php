@@ -177,7 +177,6 @@ if (!function_exists('deleteAll')) {
 
    function deleteAll($key) {
        $allKeyapp = app('redis')->keys($key);
-       print_r($allKeyapp);die;
        app('redis')->del($allKeyapp);
    }
 }
