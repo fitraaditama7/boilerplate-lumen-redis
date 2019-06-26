@@ -16,8 +16,6 @@ if (!function_exists('responses')) {
 
      function responses($data, $status) {
         $resultPrint = [];
-        $data = json_decode($data, true);
-        $data = collect($data);
 
         $resultPrint['error'] = false;
         if ($status == null) {
@@ -32,8 +30,8 @@ if (!function_exists('responses')) {
             $resultPrint['message'] = $data['message'];
         }
         $resultPrint['result'] = [];
-        $data = json_decode($data);
 
+        $data = json_decode($data);
         if(is_array($data) == true) {
             $total = count($data);
             $resultPrint['result']['num_found'] = $total;
@@ -108,8 +106,9 @@ if (!function_exists('errorQuery')) {
         // $message = json_decode($message);
 
         // print_r($message); die;
-
-        $resultPrint['status'] = 500;
+        $resultPrint = [];
+        $resultPrint['error'] = true;
+        $resultPrint['code'] = 500;
         $resultPrint['message'] = $message->errorInfo[2];
 
         return response()->json($resultPrint)->setStatusCode(500);

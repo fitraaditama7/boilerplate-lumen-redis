@@ -32,10 +32,9 @@ class VehicleController extends Controller {
                 'updated_at',
                 'status'
             ])->get();
-            // $data = json_decode($data, true);
-            // print_r($data); die;
+
             setCache($key, $data);
-            return responses($data, null);
+            return responses($data, 200);
 
         } catch (QueryException $th) {
             //throw $th;
@@ -127,8 +126,8 @@ class VehicleController extends Controller {
             $data->status = 1;
             $data->is_approved = 0;
             $data->dibuat_oleh = 1;
-            $data->created_at = date("Y-m-d",time());
-            $data->updated_at = date("Y-m-d",time());
+            // $data->created_at = date("Y-m-d",time());
+            // $data->updated_at = date("Y-m-d",time());
             $data->save();
 
             $data->message = "Data berhasil disimpan";
@@ -189,7 +188,6 @@ class VehicleController extends Controller {
                             ->where('status', 1)
                             ->firstOrFail();
 
-            $check->updated_at = date("Y-m-d",time());
             $input = $request->all();
             $check->fill($input)->save();
             $check->message = 'Data berhasil diupdate';
@@ -210,10 +208,9 @@ class VehicleController extends Controller {
                             ->where('status', 1)
                             ->firstOrFail();
 
-            $check->updated_at = date("Y-m-d",time());
+            $input = $request->all();
             $check->deleted_at = date("Y-m-d",time());
             $check->deleted_by = $request->deleted_by;
-            $input = $request->all();
             $check->fill($input)->save();
             $check->message = "Data berhasil dihapus";
 
@@ -231,7 +228,6 @@ class VehicleController extends Controller {
                             ->where('status', 1)
                             ->firstOrFail();
             $check->is_approved = 1;
-            $check->updated_at = date("Y-m-d",time());
             $input = $request->all();
             $check->fill($input)->save();
             $check->message = "Data berhasil diapprove";
