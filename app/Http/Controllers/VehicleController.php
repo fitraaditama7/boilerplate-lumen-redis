@@ -18,6 +18,7 @@ class VehicleController extends Controller {
             if ($checkCache != null) {
                 return responses($checkCache, null);
             }
+
             $data = Vehicle::select([
                 'id',
                 'jenis_kendaraan',
@@ -31,13 +32,14 @@ class VehicleController extends Controller {
                 'updated_at',
                 'status'
             ])->get();
-
+            // $data = json_decode($data, true);
+            // print_r($data); die;
             setCache($key, $data);
             return responses($data, null);
 
         } catch (QueryException $th) {
             //throw $th;
-            return \errorCustomStatus(500, $th);
+            return errorQuery($th);
         }
     }
 
@@ -76,11 +78,10 @@ class VehicleController extends Controller {
             ->where('id', $id)
             ->where('status', 1)
             ->firstOrFail();
-
             setCache($key, $data);
-            return responses($data, 201);
+            return responses($data, 200);
         } catch (QueryException $th) {
-            return \errorCustomStatus(500, $th);
+            return errorQuery($th);
         }
     }
 
@@ -105,35 +106,41 @@ class VehicleController extends Controller {
                 'kepemilikan' => 'required',
             ]);
 
-            Vehicle::insert([
-                'jenis_kendaraan' => $request->jenis_kendaraan,
-                'kapasitas_kendaraan' => $request->kapasitas_kendaraan,
-                'plat_nomor' => $request->plat_nomor,
-                'tahun_pembuatan' => $request->tahun_pembuatan,
-                'nomor_rangka' => $request->nomor_rangka,
-                'nomor_lambung' => $request->nomor_lambung,
-                'nomor_mesin' => $request->nomor_mesin,
-                'stnk' => $request->stnk,
-                'masa_berlaku_stnk' => $request->masa_berlaku_stnk,
-                'kir' => $request->kir,
-                'masa_berlaku_kir' => $request->masa_berlaku_kir,
-                'base_dc' => $request->base_dc,
-                'nomor_kp' => $request->nomor_kp,
-                'masa_berlaku_kp' => $request->masa_berlaku_kp,
-                'foto_kendaraan' => 'https://cdn.jdpower.com/Models/640x480/2018-Toyota-Corolla-LE.jpg',
-                'kepemilikan' => $request->kepemilikan,
-                'status' => 1,
-                'is_approved' => 0,
-                'dibuat_oleh' => 1,
-                'created_at' => date("Y-m-d",time()),
-                'updated_at' => date("Y-m-d",time())
-            ]);
+            $data = new Vehicle;
+
+            $data->jenis_kendaraan = $request->jenis_kendaraan;
+            $data->kapasitas_kendaraan = $request->kapasitas_kendaraan;
+            $data->plat_nomor = $request->plat_nomor;
+            $data->tahun_pembuatan = $request->tahun_pembuatan;
+            $data->nomor_rangka = $request->nomor_rangka;
+            $data->nomor_lambung = $request->nomor_lambung;
+            $data->nomor_mesin = $request->nomor_mesin;
+            $data->stnk = $request->stnk;
+            $data->masa_berlaku_stnk = $request->masa_berlaku_stnk;
+            $data->kir = $request->kir;
+            $data->masa_berlaku_kir = $request->masa_berlaku_kir;
+            $data->base_dc = $request->base_dc;
+            $data->nomor_kp = $request->nomor_kp;
+            $data->masa_berlaku_kp = $request->masa_berlaku_kp;
+            $data->foto_kendaraan = 'https://cdn.jdpower.com/Models/640x480/2018-Toyota-Corolla-LE.jpg';
+            $data->kepemilikan = $request->kepemilikan;
+            $data->status = 1;
+            $data->is_approved = 0;
+            $data->dibuat_oleh = 1;
+            $data->created_at = date("Y-m-d",time());
+            $data->updated_at = date("Y-m-d",time());
+            $data->save();
+
+            $data->message = "Data berhasil disimpan";
+
+            // print_r($data); die;
 
             deleteCache($key);
-            return responses(['message' => 'Data berhasil disimpan'], null);
+            return responses($data, null);
 
         } catch (QueryException $th) {
-            return errorCustomStatus(500, $th);
+            // print_r(json_decode($th, true)); die;
+            return errorQuery($th);
         }
     }
 
@@ -168,9 +175,10 @@ class VehicleController extends Controller {
                 ])
                 ->whereRaw("(kapasitas_kendaraan LIKE '%".$name."%' OR plat_nomor LIKE '%".$name."%' OR tahun_pembuatan LIKE '%".$name."%' OR dibuat_oleh LIKE '%".$name."%' OR created_at LIKE '%.$name.%') ".$query)
                 ->get();
+
             return responses($datas, 200);
         } catch (QueryException $th) {
-            return \errorCustomStatus(500, $th);
+            return errorQuery($th);
         }
     }
 
@@ -184,11 +192,12 @@ class VehicleController extends Controller {
             $check->updated_at = date("Y-m-d",time());
             $input = $request->all();
             $check->fill($input)->save();
+            $check->message = 'Data berhasil diupdate';
 
             deleteCache($key);
-            return responses(['message' => 'Data berhasil diupdate'], 200);
+            return responses($check, 200);
         } catch (QueryException $th) {
-            return \errorCustomStatus(500, $th);
+            return errorQuery($th);
         }
     }
 
@@ -206,11 +215,12 @@ class VehicleController extends Controller {
             $check->deleted_by = $request->deleted_by;
             $input = $request->all();
             $check->fill($input)->save();
+            $check->message = "Data berhasil dihapus";
 
             deleteCache($key);
-            return responses(['message' => 'Data berhasil didelete'], 200);
+            return responses($check, 200);
         } catch (QueryException $th) {
-            return \errorCustomStatus(500, $th);
+            return errorQuery($th);
         }
     }
 
@@ -224,11 +234,12 @@ class VehicleController extends Controller {
             $check->updated_at = date("Y-m-d",time());
             $input = $request->all();
             $check->fill($input)->save();
+            $check->message = "Data berhasil diapprove";
 
             deleteCache($key);
-            return responses(['message' => 'Data telah diapprove'], null);
+            return responses($check, null);
         } catch (QueryException $th) {
-            return errorCustomStaus(500, $th);
+            return errorQuery($th);
         }
     }
 
@@ -246,7 +257,7 @@ class VehicleController extends Controller {
             return responses($data, null);
 
         } catch (QueryException $th) {
-            return \errorCustomStatus(500, $th);
+            return errorQuery($th);
         }
     }
 }

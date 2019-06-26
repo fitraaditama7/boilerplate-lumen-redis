@@ -16,19 +16,36 @@ if (!function_exists('responses')) {
 
      function responses($data, $status) {
         $resultPrint = [];
-        $data = json_decode($data);
+        $data = json_decode($data, true);
+        $data = collect($data);
+
+        $resultPrint['error'] = false;
         if ($status == null) {
-            $resultPrint['status'] = 200;
+            $resultPrint['code'] = 200;
         } else {
-            $resultPrint['status'] = $status;
+            $resultPrint['code'] = $status;
         }
+
+        if (isset($data['message']) == false) {
+            $resultPrint['message'] = 'Success';
+        } else {
+            $resultPrint['message'] = $data['message'];
+        }
+        $resultPrint['result'] = [];
+        $data = json_decode($data);
+
         if(is_array($data) == true) {
             $total = count($data);
-            $resultPrint['total'] = $total;
+            $resultPrint['result']['num_found'] = $total;
+            $resultPrint['result']['start_index'] = 0;
+            $resultPrint['result']['end_index'] = $total-1;
+            $resultPrint['result']['rows'] = $data;
+        } else {
+            $resultPrint['result'] = $data;
+            unset($resultPrint['result']->message);
         }
-        $resultPrint['data'] = $data;
 
-        return response()->json($resultPrint)->setStatusCode($resultPrint['status']);
+        return response()->json($resultPrint)->setStatusCode($resultPrint['code']);
      }
 }
 
@@ -48,7 +65,8 @@ if (!function_exists('errorCustomStatus')) {
 
      function errorCustomStatus($status, $message) {
         $resultPrint = [];
-        $resultPrint['status'] = $status;
+        $resultPrint['error'] = true;
+        $resultPrint['code'] = $status;
 
         switch ($status) {
             case 404:
@@ -87,8 +105,12 @@ if (!function_exists('errorQuery')) {
     **/
     function errorQuery($message) {
         $resultPrint = [];
+        // $message = json_decode($message);
+
+        // print_r($message); die;
+
         $resultPrint['status'] = 500;
-        $resultPrint['message'] = $message;
+        $resultPrint['message'] = $message->errorInfo[2];
 
         return response()->json($resultPrint)->setStatusCode(500);
     }

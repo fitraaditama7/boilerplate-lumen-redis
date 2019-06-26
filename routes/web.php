@@ -31,7 +31,7 @@ $router->group(['prefix' => 'vehicle'], function() use($router) {
     $router->get('/get', 'VehicleController@index');
     $router->get('/detail/{id}', 'VehicleController@show');
     $router->get('/dashboard', 'VehicleController@dashboard');
-    $router->post('/search', 'VehicleController@search');
+    $router->get('/search', 'VehicleController@search');
     $router->post('/insert', 'VehicleController@store');
     $router->post('/delete', 'VehicleController@delete');
     $router->put('/update/{id}', 'VehicleController@update');
