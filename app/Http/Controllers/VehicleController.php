@@ -86,7 +86,6 @@ class VehicleController extends Controller {
 
     public function store(Request $request) {
         try {
-            $key = 'data-vehicle*';
             $this->validate($request, [
                 'jenis_kendaraan' => 'required',
                 'kapasitas_kendaraan' => 'required',
@@ -133,8 +132,8 @@ class VehicleController extends Controller {
             $data->message = "Data berhasil disimpan";
 
             // print_r($data); die;
-
-            deleteAll($key);
+            $key = 'data-vehicle';
+            deleteCache($key);
             return responses($data, null);
 
         } catch (QueryException $th) {
@@ -183,7 +182,6 @@ class VehicleController extends Controller {
 
     public function update($id, Request $request) {
         try {
-            $key = 'data-vehicle*';
             $check = Vehicle::where('id', $id)
                             ->where('status', 1)
                             ->firstOrFail();
@@ -192,7 +190,11 @@ class VehicleController extends Controller {
             $check->fill($input)->save();
             $check->message = 'Data berhasil diupdate';
 
-            deleteAll($key);
+            $key = 'data-vehicle';
+            $keyId = 'data-vehicle-'.$id;
+            deleteCache($key);
+            deleteCache($keyId);
+
             return responses($check, 200);
         } catch (QueryException $th) {
             return errorQuery($th);
@@ -202,7 +204,7 @@ class VehicleController extends Controller {
     public function delete(Request $request) {
         try {
             $id = $request->id;
-            $key = 'data-vehicle*';
+
 
             $check = Vehicle::where('id', $id)
                             ->where('status', 1)
@@ -214,7 +216,11 @@ class VehicleController extends Controller {
             $check->fill($input)->save();
             $check->message = "Data berhasil dihapus";
 
-            deleteAll($key);
+            $key = 'data-vehicle';
+            $keyId = 'data-vehicle-'.$id;
+            deleteCache($key);
+            deleteCache($keyId);
+
             return responses($check, 200);
         } catch (QueryException $th) {
             return errorQuery($th);
@@ -223,16 +229,20 @@ class VehicleController extends Controller {
 
     public function approve($id, Request $request) {
         try {
-            $key = 'data-vehicle*';
             $check = Vehicle::where('id', $id)
                             ->where('status', 1)
                             ->firstOrFail();
             $check->is_approved = 1;
+            $check->updated_at = date("Y-m-d",time());
             $input = $request->all();
             $check->fill($input)->save();
             $check->message = "Data berhasil diapprove";
 
-            deleteAll($key);
+            $key = 'data-vehicle';
+            $keyId = 'data-vehicle-'.$id;
+            deleteCache($key);
+            deleteCache($keyId);
+
             return responses($check, null);
         } catch (QueryException $th) {
             return errorQuery($th);
