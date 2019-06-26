@@ -37,3 +37,4 @@ $router->group(['prefix' => 'vehicle'], function() use($router) {
     $router->put('/update/{id}', 'VehicleController@update');
     $router->put('/approve/{id}', 'VehicleController@approve');
 });
+

@@ -86,7 +86,7 @@ class VehicleController extends Controller {
 
     public function store(Request $request) {
         try {
-            $key = 'data-vehicle';
+            $key = 'data-vehicle*';
             $this->validate($request, [
                 'jenis_kendaraan' => 'required',
                 'kapasitas_kendaraan' => 'required',
@@ -134,7 +134,7 @@ class VehicleController extends Controller {
 
             // print_r($data); die;
 
-            deleteCache($key);
+            deleteAll($key);
             return responses($data, null);
 
         } catch (QueryException $th) {
@@ -183,7 +183,7 @@ class VehicleController extends Controller {
 
     public function update($id, Request $request) {
         try {
-            $key = 'data-vehicle-'.$id;
+            $key = 'data-vehicle*';
             $check = Vehicle::where('id', $id)
                             ->where('status', 1)
                             ->firstOrFail();
@@ -192,7 +192,7 @@ class VehicleController extends Controller {
             $check->fill($input)->save();
             $check->message = 'Data berhasil diupdate';
 
-            deleteCache($key);
+            deleteAll($key);
             return responses($check, 200);
         } catch (QueryException $th) {
             return errorQuery($th);
@@ -202,7 +202,7 @@ class VehicleController extends Controller {
     public function delete(Request $request) {
         try {
             $id = $request->id;
-            $key = 'data-vehicle-'.$id;
+            $key = 'data-vehicle*';
 
             $check = Vehicle::where('id', $id)
                             ->where('status', 1)
@@ -214,7 +214,7 @@ class VehicleController extends Controller {
             $check->fill($input)->save();
             $check->message = "Data berhasil dihapus";
 
-            deleteCache($key);
+            deleteAll($key);
             return responses($check, 200);
         } catch (QueryException $th) {
             return errorQuery($th);
@@ -223,7 +223,7 @@ class VehicleController extends Controller {
 
     public function approve($id, Request $request) {
         try {
-            $key = 'data-vehicle-'.$id;
+            $key = 'data-vehicle*';
             $check = Vehicle::where('id', $id)
                             ->where('status', 1)
                             ->firstOrFail();
@@ -232,7 +232,7 @@ class VehicleController extends Controller {
             $check->fill($input)->save();
             $check->message = "Data berhasil diapprove";
 
-            deleteCache($key);
+            deleteAll($key);
             return responses($check, null);
         } catch (QueryException $th) {
             return errorQuery($th);

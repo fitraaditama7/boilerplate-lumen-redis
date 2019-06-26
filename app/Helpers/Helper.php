@@ -158,7 +158,7 @@ if (!function_exists('deleteCache')) {
      /**
     *
     * @param string $key
-    * Set key for redis
+    * Delete key for redis
     *
     **/
 
@@ -166,6 +166,22 @@ if (!function_exists('deleteCache')) {
         app('redis')->del($key);
     }
 }
+
+if (!function_exists('deleteAll')) {
+    /**
+   *
+   * @param string $key
+   * Delete key for redis
+   *
+   **/
+
+   function deleteAll($key) {
+       $allKeyapp = app('redis')->keys($key);
+       print_r($allKeyapp);die;
+       app('redis')->del($allKeyapp);
+   }
+}
+
 
 
 
